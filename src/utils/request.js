@@ -2,10 +2,8 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
 const http = axios.create({
-  // 通用请求的地址前缀
-  // baseURL: 'https://wechatopen.mynatapp.cc/v3pz',
-  baseURL: 'https://v3pz.itndedu.com/v3pz',
-  timeout: 10000 // 超时时间
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 10000
 })
 
 // 添加请求拦截器

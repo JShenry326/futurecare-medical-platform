@@ -11,10 +11,10 @@ export default defineConfig({
     vue(),
     vueJsx(),
     AutoImport({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver()]
     }),
     Components({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver()]
     })
   ]
 })
