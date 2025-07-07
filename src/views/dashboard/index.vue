@@ -50,55 +50,26 @@ const user = ref({
   timer: "", //登录时间
   ip: "", //登录ip
 });
-const types = ref([
-  {
-    state: "已完成", //服务状态
-    num: 100, //数量
-  },
-  {
-    state: "已完成", //服务状态
-    num: 100, //数量
-  },
-  {
-    state: "已完成", //服务状态
-    num: 100, //数量
-  },
-  {
-    state: "已完成", //服务状态
-    num: 100, //数量
-  },
-]);
-const typeList = ref([
-  {
-    date: "2024-07-24", //日期
-    order_sum: 66, //当天订单数
-    order_money: 100, //总金额
-  },
-  {
-    date: "2024-07-24", //日期
-    order_sum: 500, //当天订单数
-    order_money: 100, //总金额
-  },
-  {
-    date: "2024-07-24", //日期
-    order_sum: 66, //当天订单数
-    order_money: 100, //总金额
-  },
-  {
-    date: "2024-07-24", //日期
-    order_sum: 66, //当天订单数
-    order_money: 100, //总金额
-  },
-]);
+const types = ref([]);
+const typeList = ref([]);
 const imgs = ["dzf.png", "dfw.png", "ywc.png", "yqx.png"];
 const color = ["#F05050", "#7266BA", "#23B7E5", "#27C24C"];
 const getData = async () => {
   let res = await getControlData();
+  console.log(res, 'res')
   let data = res?.data?.data;
   if (data) {
     user.value = data.user;
-    types.value = data.types;
-    typeList.value = data.typeList;
+    // types.value = data.types;
+    types.value = [{state: "待支付", num: 6}, {state: "待服务", num: 2}, {state: "已完成", num: 11}, {state: "已取消", num: 3}]
+    // typeList.value = data.typeList;
+    typeList.value = [
+      {date: '2024-07-26', order_sum: 5, order_money: 2.5},
+      {date: '2024-07-26', order_sum: 10, order_money: 5},
+      {date: '2024-07-26', order_sum: 6, order_money: 3},
+      {date: '2024-07-26', order_sum: 4, order_money: 2},
+      {date: '2024-07-26', order_sum: 8, order_money: 4}
+    ]
     initEchart();
   }
 };

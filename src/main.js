@@ -8,17 +8,20 @@ import router from './router'
 import store from './store'
 import PanelHead from './components/panelHead.vue'
 
-
-const storeageStore = localStorage.getItem('vuex')
+// 刷新后的动态路由添加
+const storeageStore = localStorage.getItem('v3pz')
 if (storeageStore) {
   store.commit('dynamicMenu', JSON.parse(storeageStore).menu.routerList)
   store.state.menu.routerList.forEach(item => {
-    router.addRoute("main", item)
+    router.addRoute('main', item)
   })
 }
 
+// 路由守卫
+// 全局前置守卫
 router.beforeEach((to, from) => {
   const token = localStorage.getItem('token')
+  console.log(token, 'token')
   // 非登陆页面token不存在
   if (to.path !== '/login' && !token) {
     return '/login'
@@ -38,6 +41,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
+// 面板提示全局注册
 app.component('PanelHead', PanelHead)
 
 app.use(ElementPlus)

@@ -3,8 +3,14 @@ import menu from './menu'
 import createPersistedState from 'vuex-persistedstate'
 
 export default createStore({
-    plugins: [createPersistedState()],
-    modules: {
-        menu
-    }
+  // 持久化处理
+  plugins: [
+    new createPersistedState({
+      storage: window.localStorage,
+      key: 'v3pz'
+    })
+  ],
+  modules: {
+    menu
+  }
 })

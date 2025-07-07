@@ -1,154 +1,105 @@
 <template>
-    <panel-head :info="route" />
-    <div class="btns">
-        <el-button @click="openModel(null)" type="primary" size="small" :icon="Plus">新增</el-button>
-        <el-popconfirm
-          confirm-button-text="是"
-          cancel-button-text="否"
-          :icon="InfoFilled"
-          icon-color="#626AEF"
-          title="是否确认删除？"
-          @confirm="confirmEvent"
-        >
-          <template #reference>
-            <el-button type="danger" size="small" :icon="Delete">删除</el-button>
-          </template>
-        </el-popconfirm>
-    </div>
-    <el-table
-    :data="tableData.list"
-    stripe
-    style="width: 100%"
-    @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" />
-      <el-table-column label="id" prop="id" />
-      <el-table-column label="昵称" prop="name" />
-      <el-table-column label="头像">
-        <template #default="scope">
-          <el-image
-              style="width: 50px;
-              height: 50px"
-              :src="scope.row.avatar"
-            />
-        </template>
-      </el-table-column>
-      <el-table-column label="性别">
-        <template #default="scope">
-          {{ scope.row.sex === '1' ? '男' : '女' }}
-        </template>
-      </el-table-column>
-      <el-table-column label="手机号" prop="mobile" />
-      <el-table-column label="状态" prop="active" >
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <el-tag :type="scope.row.active ? 'success' : 'danger'">{{ scope.row.active ? '正常' : '失效' }}</el-tag>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间">
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <el-icon><Clock /></el-icon>
-            <span style="margin-left: 10px">{{ scope.row.create_time }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template #default="scope">
-          <el-button type="primary" @click="openModel(scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="pagination-info">
-      <el-pagination
-        v-model:current-page="paginationData.pageNum"
-        size="small"
-        :background="false"
-        layout="total, prev, pager, next"
-        :total="tableData.total"
-        @current-change="handleCurrentChange"
-      />
-    </div>
-    <el-dialog
-      v-model="dialogFormVisible"
-      :before-close="beforeClose"
-      title="陪护师"
-      width="500">
-      <el-form
-        label-width="100px"
-        label-position="left"
-        :model="form"
-        :rules="rules"
-        ref="formRef"
-        >
-        <el-form-item v-show="false" prop="id">
-          <el-input v-model="form.id" placeholder="请输入昵称"/>
-        </el-form-item>
-        <el-form-item label="昵称" prop="name">
-          <el-input  v-model="form.name" placeholder="请输入昵称"/>
-        </el-form-item>
-        <el-form-item label="头像" prop="avatar">
-          <el-button v-if="!form.avatar" @click="dialogImgVisible=true" type="primary">点击上传</el-button>
-          <el-image
-            v-else
-            style="width: 100px;
-            height: 100px"
-            :src="form.avatar"
-            @click="dialogImgVisible=true"
-          />
-        </el-form-item>
-        <el-form-item label="性别" prop="sex">
-            <el-select v-model="form.sex" placeholder="请选择性别">
-                <el-option label="男" value="1" />
-                <el-option label="女" value="2" />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-            <el-input-number v-model="form.age" :min="18" :max="50" />
-        </el-form-item>
-        <el-form-item label="手机号" prop="mobile">
-          <el-input v-model="form.mobile" placeholder="请输入手机号" />
-        </el-form-item>
-        <el-form-item label="是否生效" prop="active">
-          <el-radio-group v-model="form.active">
-            <el-radio :value="0">失效</el-radio>
-            <el-radio :value="1">生效</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="confirm(formRef)">
-          确认
-          </el-button>
+  <panel-head :info="route" />
+  <div class="btns">
+    <el-button @click="openModel(null)" type="primary" size="small" :icon="Plus">新增</el-button>
+    <el-popconfirm confirm-button-text="是" cancel-button-text="否" :icon="InfoFilled" icon-color="#626AEF" title="是否确认删除？" @confirm="confirmEvent">
+      <template #reference>
+        <el-button type="danger" size="small" :icon="Delete">删除</el-button>
+      </template>
+    </el-popconfirm>
+  </div>
+  <el-table :data="tableData.list" stripe style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table-column type="selection" width="55" />
+    <el-table-column label="id" prop="id" />
+    <el-table-column label="昵称" prop="name" />
+    <el-table-column label="头像">
+      <template #default="scope">
+        <el-image style="width: 50px; height: 50px" :src="scope.row.avatar" />
+      </template>
+    </el-table-column>
+    <el-table-column label="性别">
+      <template #default="scope">
+        {{ scope.row.sex === '1' ? '男' : '女' }}
+      </template>
+    </el-table-column>
+    <el-table-column label="手机号" prop="mobile" />
+    <el-table-column label="状态" prop="active">
+      <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <el-tag :type="scope.row.active ? 'success' : 'danger'">{{ scope.row.active ? '正常' : '失效' }}</el-tag>
         </div>
       </template>
-    </el-dialog>
-    <el-dialog
-      v-model="dialogImgVisible"
-      title="选择图片"
-      width="680">
-        <div class="image-list">
-          <div v-for="(item, index) in fileList" :key="item.name" class="img-box" @click="selectIndex=index">
-            <div v-if="selectIndex === index" class="select">
-              <el-icon color="#fff"><Check /></el-icon>
-            </div>
-            <el-image
-              style="width: 148px;
-              height: 148px"
-              :src="item.url"
-            />
-          </div>
+    </el-table-column>
+    <el-table-column label="创建时间">
+      <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <el-icon><Clock /></el-icon>
+          <span style="margin-left: 10px">{{ scope.row.create_time }}</span>
         </div>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button @click="dialogImgVisible = false">取消</el-button>
-            <el-button type="primary" @click="confrimImage(formRef)">
-            确认
-            </el-button>
-          </div>
-        </template>
-    </el-dialog>
+      </template>
+    </el-table-column>
+    <el-table-column label="操作">
+      <template #default="scope">
+        <el-button type="primary" @click="openModel(scope.row)">编辑</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <div class="pagination-info">
+    <el-pagination v-model:current-page="paginationData.pageNum" size="small" :background="false" layout="total, prev, pager, next" :total="tableData.total" @current-change="handleCurrentChange" />
+  </div>
+  <el-dialog v-model="dialogFormVisible" :before-close="beforeClose" title="陪护师" width="500">
+    <el-form label-width="100px" label-position="left" :model="form" :rules="rules" ref="formRef">
+      <el-form-item v-show="false" prop="id">
+        <el-input v-model="form.id" />
+      </el-form-item>
+      <el-form-item label="昵称" prop="name">
+        <el-input v-model="form.name" placeholder="请输入昵称" />
+      </el-form-item>
+      <el-form-item label="头像" prop="avatar">
+        <el-button v-if="!form.avatar" @click="dialogImgVisible = true" type="primary">点击上传</el-button>
+        <el-image v-else style="width: 100px; height: 100px" :src="form.avatar" @click="dialogImgVisible = true" />
+      </el-form-item>
+      <el-form-item label="性别" prop="sex">
+        <el-select v-model="form.sex" placeholder="请选择性别">
+          <el-option label="男" value="1" />
+          <el-option label="女" value="2" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="年龄" prop="age">
+        <el-input-number v-model="form.age" :min="18" :max="50" />
+      </el-form-item>
+      <el-form-item label="手机号" prop="mobile">
+        <el-input v-model="form.mobile" placeholder="请输入手机号" />
+      </el-form-item>
+      <el-form-item label="是否生效" prop="active">
+        <el-radio-group v-model="form.active">
+          <el-radio :value="0">失效</el-radio>
+          <el-radio :value="1">生效</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="confirm(formRef)"> 确认 </el-button>
+      </div>
+    </template>
+  </el-dialog>
+  <el-dialog v-model="dialogImgVisible" title="选择图片" width="680">
+    <div class="image-list">
+      <div v-for="(item, index) in fileList" :key="item.name" class="img-box" @click="selectIndex = index">
+        <div v-if="selectIndex === index" class="select">
+          <el-icon color="#fff"><Check /></el-icon>
+        </div>
+        <el-image style="width: 148px; height: 148px" :src="item.url" />
+      </div>
+    </div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogImgVisible = false">取消</el-button>
+        <el-button type="primary" @click="confrimImage(formRef)"> 确认 </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 <script setup>
 import { reactive, ref, onMounted, nextTick } from 'vue'
@@ -190,18 +141,21 @@ const getList = () => {
 
 const dialogFormVisible = ref(false)
 const form = reactive({
-    age: 28,
-    sex: '',
-    avatar: '',
-    active: 1
+  age: 28,
+  sex: '',
+  avatar: '',
+  active: 1,
+  mobile: '',
+  name: '',
+  id: ''
 })
 
 // 陪护师新增/编辑
-const openModel = (rowData) => {
+const openModel = rowData => {
   dialogFormVisible.value = true
   nextTick(() => {
     // 如果是编辑
-    if(rowData) {
+    if (rowData) {
       Object.assign(form, rowData)
     }
   })
@@ -216,7 +170,7 @@ const dialogImgVisible = ref(false)
 // 照片墙
 let fileList = []
 const selectIndex = ref(0)
-const confrimImage = (formEl) => {
+const confrimImage = formEl => {
   form.avatar = fileList[selectIndex.value].url
   dialogImgVisible.value = false
   formEl.validateField('avatar')
@@ -233,12 +187,12 @@ const validateUser = (rule, value, callback) => {
 }
 const rules = ref({
   name: [{ required: true, trigger: 'blur', message: '请填写昵称' }],
-  avatar:[{ required: true, message: '请选择头像'}],
-  sex:[{ required: true, trigger: 'change', message: '请选择性别'}],
+  avatar: [{ required: true, message: '请选择头像' }],
+  sex: [{ required: true, trigger: 'change', message: '请选择性别' }],
   mobile: [{ required: true, validator: validateUser, trigger: 'blur' }]
 })
 const formRef = ref()
-const confirm = async (formEl) => {
+const confirm = async formEl => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
@@ -255,13 +209,13 @@ const confirm = async (formEl) => {
   })
 }
 
-const handleCurrentChange = (val) => {
+const handleCurrentChange = val => {
   paginationData.pageNum = val
   getList()
 }
 // 选中table项
 const multipleSelection = ref([])
-const handleSelectionChange = (val) => {
+const handleSelectionChange = val => {
   multipleSelection.value = val
   console.log(multipleSelection)
 }
@@ -271,12 +225,13 @@ const confirmEvent = () => {
     return ElMessage({
       showClose: true,
       message: '请选择至少一个删除项',
-      type: 'warning',
+      type: 'warning'
     })
   }
-  
+
   deleteCompanion({ id: multipleSelection.value }).then(({ data }) => {
     if (data.code === 10000) {
+      ElMessage.success('删除成功')
       getList()
     }
   })
@@ -284,8 +239,8 @@ const confirmEvent = () => {
 </script>
 <style lang="less" scoped>
 .btns {
-    padding: 10px 0 10px 10px;
-    background-color: #fff;
+  padding: 10px 0 10px 10px;
+  background-color: #fff;
 }
 .image-list {
   display: flex;
